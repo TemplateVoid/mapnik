@@ -2,7 +2,7 @@
    srs="+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs"
    background-color="white">
 
-    <Style name="dots">
+    <Style name="dots" direct-image-filters="dot()">
         <Rule>
             <DotSymbolizer rx="[rx]" ry="[ry]" fill="[fill]" fill-opacity="[opacity]"/>
         </Rule>
