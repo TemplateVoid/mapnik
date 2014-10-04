@@ -1,7 +1,7 @@
 language: objective-c
 
 before_install:
-  - brew install webp icu4c boost proj jpeg libtiff harfbuzz
+  - brew install webp icu4c boost boost-python proj jpeg libtiff harfbuzz
 
 install:
   - true
