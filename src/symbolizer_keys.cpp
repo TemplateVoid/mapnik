@@ -119,7 +119,8 @@ static const property_meta_type key_meta[const_max_key] =
                         property_types::target_upright},
     property_meta_type{ "avoid-edges",false, nullptr, property_types::target_bool },
     property_meta_type{ "font-feature-settings", nullptr, nullptr, property_types::target_font_feature_settings },
-
+    property_meta_type{ "rx", 1.0, nullptr, property_types::target_double },
+    property_meta_type{ "ry", 1.0, nullptr, property_types::target_double }
 };
 
 property_meta_type const& get_meta(mapnik::keys key)

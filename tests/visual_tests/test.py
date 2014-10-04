@@ -288,6 +288,7 @@ files = {
     'marker-collide':{'sizes':[(512,512)]},
     'postgis-inline':{'sizes':[(512,512)]},
     'text-line-wrap':{'sizes':[(512,512)]},
+    'dots':{'sizes':[(512,512)]},
     }
 
 class Reporting:
