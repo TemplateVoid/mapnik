@@ -1,9 +1,12 @@
 language: objective-c
 
 before_install:
+  - wget https://bootstrap.pypa.io/get-pip.py
+  - python get-pip.py
+  - sudo pip install nose
   - brew update
   - brew rm boost
-  - brew install webp icu4c boost boost-python proj jpeg libtiff harfbuzz
+  - brew install webp icu4c boost postgis boost-python proj jpeg libtiff harfbuzz
 
 install:
   - true
