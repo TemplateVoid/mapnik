@@ -35,6 +35,7 @@
 #include <mapnik/text_symbolizer.hpp>
 #include <mapnik/markers_symbolizer.hpp>
 #include <mapnik/debug_symbolizer.hpp>
+#include <mapnik/vector_mark_symbolizer.hpp>
 #include <mapnik/feature.hpp>
 #include <mapnik/expression.hpp>
 #include <mapnik/expression_string.hpp>
@@ -114,6 +115,13 @@ inline bool operator==(debug_symbolizer const& lhs,
     return (&lhs == &rhs);
 }
 
+inline bool operator==(vector_mark_symbolizer const& lhs,
+                       vector_mark_symbolizer const& rhs)
+{
+    return (&lhs == &rhs);
+}
+
+
 typedef boost::variant<point_symbolizer,
                        line_symbolizer,
                        line_pattern_symbolizer,
@@ -124,7 +132,8 @@ typedef boost::variant<point_symbolizer,
                        text_symbolizer,
                        building_symbolizer,
                        markers_symbolizer,
-                       debug_symbolizer> symbolizer;
+                       debug_symbolizer,
+		       vector_mark_symbolizer> symbolizer;
 
 class MAPNIK_DECL rule
 {

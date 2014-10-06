@@ -302,6 +302,7 @@ source += Split(
     agg/process_shield_symbolizer.cpp
     agg/process_markers_symbolizer.cpp
     agg/process_debug_symbolizer.cpp
+    agg/process_vector_mark_symbolizer.cpp
     """
     )
 
