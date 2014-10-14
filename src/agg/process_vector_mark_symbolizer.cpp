@@ -75,6 +75,8 @@ void agg_renderer<T>::process(vector_mark_symbolizer const& sym,
         agg::trans_affine tr;
         evaluate_transform(tr, feature, sym.get_image_transform());
         agg::trans_affine_translation recenter(-offset.x, -offset.y);
+	tr *= agg::trans_affine_translation(center.x, center.y);
+	tr *= recenter;
         
         for (std::size_t i=0; i<feature.num_geometries(); ++i)
         {
@@ -126,7 +128,7 @@ void agg_renderer<T>::process(vector_mark_symbolizer const& sym,
                 detector_->has_placement(label_ext))
             {
 
-                render_marker(pixel_position(x0 - offset.x + center.x, y0 - offset.y + center.y),
+                render_marker(pixel_position(x0, y0),
                               **marker,
                               tr,
                               sym.get_opacity(),
