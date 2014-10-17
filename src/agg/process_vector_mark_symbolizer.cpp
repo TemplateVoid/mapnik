@@ -105,7 +105,7 @@ void agg_renderer<T>::process(vector_mark_symbolizer const& sym,
                 
                 if (sym.get_stretch()) 
                 {
-                    double scale = length/sym.get_base();
+                    double scale = length/(sym.get_base()*scale_factor_);
                     tr *= agg::trans_affine_scaling(scale, 1.0);
                 }
                 tr *= rotation;
