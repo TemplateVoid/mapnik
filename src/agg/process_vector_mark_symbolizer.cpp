@@ -97,16 +97,16 @@ void agg_renderer<T>::process(vector_mark_symbolizer const& sym,
                     continue;
                 
                 double length = sqrt((x1-x0)*(x1-x0) + (y1-y0)*(y1-y0));
+                
                 double angle = acos((x1-x0)/length);
                 if (y1 -y0 < 0)
                     angle = -angle;
         
                 agg::trans_affine_rotation rotation(angle);
-                
                 if (sym.get_stretch()) 
                 {
                     double scale = length/(sym.get_base()*scale_factor_);
-                    tr *= agg::trans_affine_scaling(scale, 1.0);
+                    tr *= agg::trans_affine_scaling(scale);
                 }
                 tr *= rotation;
             }
