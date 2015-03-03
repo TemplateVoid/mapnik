@@ -118,7 +118,7 @@ public:
                  feature_impl & feature,
                  proj_transform const& prj_trans);
     void process(vector_mark_symbolizer const& sym,
-                 feature_impl & feature,
+                 mapnik::feature_impl & feature,
                  proj_transform const& prj_trans);
 
 
