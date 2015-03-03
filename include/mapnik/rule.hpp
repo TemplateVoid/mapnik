@@ -33,9 +33,9 @@
 #include <mapnik/raster_symbolizer.hpp>
 #include <mapnik/shield_symbolizer.hpp>
 #include <mapnik/text_symbolizer.hpp>
-#include <mapnik/vector_mark_symbolizer.hpp>
 #include <mapnik/markers_symbolizer.hpp>
 #include <mapnik/debug_symbolizer.hpp>
+#include <mapnik/vector_mark_symbolizer.hpp>
 #include <mapnik/feature.hpp>
 #include <mapnik/expression.hpp>
 #include <mapnik/expression_string.hpp>
