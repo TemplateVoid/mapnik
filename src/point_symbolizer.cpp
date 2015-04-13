@@ -32,6 +32,9 @@ namespace mapnik
 static const char * point_placement_strings[] = {
     "centroid",
     "interior",
+    "all",
+    "first",
+    "last"
     ""
 };
 
@@ -86,6 +89,16 @@ void point_symbolizer::set_ignore_placement(bool ignore_placement)
 bool point_symbolizer::get_ignore_placement() const
 {
     return ignore_placement_;
+}
+
+void point_symbolizer::set_rotate(rotate_e rotate)
+{
+    rotate_ = rotate;
+}
+
+rotate_e point_symbolizer::get_rotate() const
+{
+    return rotate_;
 }
 
 }

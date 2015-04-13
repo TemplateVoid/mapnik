@@ -34,10 +34,14 @@ namespace mapnik
 enum point_placement_enum {
     CENTROID_POINT_PLACEMENT,
     INTERIOR_POINT_PLACEMENT,
+    ALL,
+    FIRST,
+    LAST,
     point_placement_enum_MAX
 };
 
 DEFINE_ENUM( point_placement_e, point_placement_enum );
+DEFINE_ENUM( placement_e, placement_enum );
 
 struct MAPNIK_DECL point_symbolizer :
         public symbolizer_with_image, public symbolizer_base
@@ -51,11 +55,15 @@ struct MAPNIK_DECL point_symbolizer :
     point_placement_e get_point_placement() const;
     void set_ignore_placement(bool ignore_placement);
     bool get_ignore_placement() const;
-
+    
+    void set_rotate(rotate_e rotate);
+    rotate_e get_rotate() const;
+   
 private:
     bool overlap_;
     point_placement_e point_p_;
     bool ignore_placement_;
+    rotate_e rotate_;
 };
 }
 
