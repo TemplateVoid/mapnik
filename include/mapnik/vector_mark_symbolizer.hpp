@@ -11,7 +11,7 @@ namespace mapnik
         public symbolizer_with_image, public symbolizer_base
   {
     vector_mark_symbolizer(): 
-        symbolizer_with_image(new path_expression),
+        symbolizer_with_image(path_expression_ptr(new path_expression)),
         symbolizer_base(),
         stretch_(false),
         base_(0),
