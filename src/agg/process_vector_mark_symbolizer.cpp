@@ -70,13 +70,10 @@ void agg_renderer<T>::process(vector_mark_symbolizer const& sym,
     {
         box2d<double> const& bbox = (*marker)->bounding_box();
         coord2d center = bbox.center();
-        coord2d offset = sym.get_anchor();
 
         agg::trans_affine tr;
         evaluate_transform(tr, feature, sym.get_image_transform());
-        agg::trans_affine_translation recenter(-offset.x, -offset.y);
 	tr *= agg::trans_affine_translation(center.x, center.y);
-	tr *= recenter;
         
         for (std::size_t i=0; i<feature.num_geometries(); ++i)
         {
@@ -105,21 +102,14 @@ void agg_renderer<T>::process(vector_mark_symbolizer const& sym,
                 double length = distance(x0, y0, x1, y1);
                 if (length == 0.0)
                     continue;
-                if (sym.get_stretch())
-                {
-                    double scale = length/(sym.get_base()*scale_factor_);
-                    trans *= agg::trans_affine_scaling(scale);
-                }
+                
+                double scale = length/(sym.get_base()*scale_factor_);
+                trans *= agg::trans_affine_scaling(scale);
+                
                 double angle = acos((x1 - x0)/length);
                 if (y1 - y0 < 0.0)
                     angle = -angle;
                 trans *= agg::trans_affine_rotation(angle);
-                if (sym.get_center())
-                {
-                    if (!label::centroid(geom, x0, y0))
-                        return;
-                    t_.forward(&x0, &y0);
-                }
                 render_marker(pixel_position(x0, y0), **marker,
                               trans, sym.get_opacity(), sym.comp_op());
                 x0 = x1;

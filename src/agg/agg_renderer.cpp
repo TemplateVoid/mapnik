@@ -533,6 +533,34 @@ void agg_renderer<T>::draw_geo_extent(box2d<double> const& extent, mapnik::color
     }
 }
 
+boost::shared_ptr<image_data_32> render_pattern(rasterizer & ras, marker const& marker)
+{
+    typedef agg::pixfmt_rgba32_pre pixfmt;
+    typedef agg::renderer_base<pixfmt> renderer_base;
+    typedef agg::renderer_scanline_aa_solid<renderer_base> renderer_solid;
+    agg::scanline_u8 sl;
+    double width = marker.width();
+    double height = marker.height();
+    boost::shared_ptr<mapnik::image_data_32> image = boost::make_shared<mapnik::image_data_32>(width, height);
+    agg::rendering_buffer buf(image->getBytes(), image->width(), image->height(), image->width() * 4);
+    pixfmt pixf(buf);
+    renderer_base renb(pixf);
+    mapnik::box2d<double> const& bbox = (*marker.get_vector_data())->bounding_box();
+    mapnik::coord<double,2> c = bbox.center();
+    agg::trans_affine mtx = agg::trans_affine_translation(-c.x,-c.y);
+    mtx.translate(0.5 * image->width(), 0.5 * image->height());
+    mapnik::svg::vertex_stl_adapter<mapnik::svg::svg_path_storage> stl_storage((*marker.get_vector_data())->source());
+    mapnik::svg::svg_path_adapter svg_path(stl_storage);
+    mapnik::svg::svg_renderer_agg<mapnik::svg::svg_path_adapter,
+                                  agg::pod_bvector<mapnik::svg::path_attributes>,
+                                  renderer_solid,
+                                  agg::pixfmt_rgba32_pre > svg_renderer(svg_path,
+                                                                        (*marker.get_vector_data())->attributes());
+
+    svg_renderer.render(ras, sl, renb, mtx, 1.0, bbox);
+    return image;
+}
+
 template class agg_renderer<image_32>;
 template void agg_renderer<image_32>::debug_draw_box<agg::rendering_buffer>(
                 agg::rendering_buffer& buf,

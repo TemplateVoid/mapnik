@@ -102,15 +102,14 @@ void  agg_renderer<T>::process(line_pattern_symbolizer const& sym,
     std::string filename = path_processor_type::evaluate( *sym.get_filename(), feature);
 
     boost::optional<marker_ptr> mark = marker_cache::instance().find(filename,true);
-    if (!mark) return;
+    if (!mark || !(*mark)) return;
 
-    if (!(*mark)->is_bitmap())
-    {
-        MAPNIK_LOG_DEBUG(agg_renderer) << "agg_renderer: Only images (not '" << filename << "') are supported in the line_pattern_symbolizer";
-        return;
-    }
+    boost::optional<image_ptr> pat;
+    if ((*mark)->is_bitmap())
+        pat = (*mark)->get_bitmap_data();
+    else
+        pat = render_pattern(*ras_ptr, **mark);
 
-    boost::optional<image_ptr> pat = (*mark)->get_bitmap_data();
     if (!pat) return;
 
     agg::rendering_buffer buf(current_buffer_->raw_data(),current_buffer_->width(),current_buffer_->height(), current_buffer_->width() * 4);

@@ -35,6 +35,7 @@
 #include <mapnik/image_compositing.hpp>  // for composite_mode_e
 #include <mapnik/pixel_position.hpp>
 #include <mapnik/request.hpp>
+#include <mapnik/image_data.hpp>
 
 // boost
 #include <boost/scoped_ptr.hpp>
@@ -184,6 +185,9 @@ private:
     double gamma_;
     void setup(Map const& m);
 };
+
+boost::shared_ptr<image_data_32> render_pattern(rasterizer & ras, marker const& marker);
+
 }
 
 #endif // MAPNIK_AGG_RENDERER_HPP

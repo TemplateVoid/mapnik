@@ -79,16 +79,12 @@ void agg_renderer<T>::process(polygon_pattern_symbolizer const& sym,
         MAPNIK_LOG_DEBUG(agg_renderer) << "agg_renderer: File not found=" << filename;
     }
 
-    if (!marker) return;
-
-    if (!(*marker)->is_bitmap())
-    {
-        MAPNIK_LOG_DEBUG(agg_renderer) << "agg_renderer: Only images (not '" << filename << "') are supported in the polygon_pattern_symbolizer";
-
-        return;
-    }
-
-    boost::optional<image_ptr> pat = (*marker)->get_bitmap_data();
+    if (!marker || !(*marker)) return;
+    boost::optional<image_ptr> pat;
+    if ((*marker)->is_bitmap())
+        pat = (*marker)->get_bitmap_data();
+    else
+        pat = render_pattern(*ras_ptr, **marker);
 
     if (!pat) return;
     box2d<double> clip_box = clipping_extent();
