@@ -54,12 +54,14 @@ struct MAPNIK_DECL point_symbolizer :
     point_placement_e get_point_placement() const;
     void set_ignore_placement(bool ignore_placement);
     bool get_ignore_placement() const;
-    
+    void set_rotate(bool rotate);
+    bool get_rotate() const;
    
 private:
     bool overlap_;
     point_placement_e point_p_;
     bool ignore_placement_;
+    bool rotate_;
 };
 }
 

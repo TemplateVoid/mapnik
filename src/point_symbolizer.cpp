@@ -32,31 +32,37 @@ namespace mapnik
 static const char * point_placement_strings[] = {
     "centroid",
     "interior",
+    "all",
+    "first",
+    "last"
     ""
 };
 
 IMPLEMENT_ENUM( point_placement_e, point_placement_strings )
 
-point_symbolizer::point_symbolizer()
-: symbolizer_with_image(path_expression_ptr(new path_expression)), // FIXME
+point_symbolizer::point_symbolizer():
+    symbolizer_with_image(path_expression_ptr(new path_expression)), // FIXME
     symbolizer_base(),
     overlap_(false),
     point_p_(CENTROID_POINT_PLACEMENT),
-    ignore_placement_(false) {}
+    ignore_placement_(false),
+    rotate_(false) {}
 
 point_symbolizer::point_symbolizer(path_expression_ptr file)
     : symbolizer_with_image(file),
       symbolizer_base(),
       overlap_(false),
       point_p_(CENTROID_POINT_PLACEMENT),
-      ignore_placement_(false) {}
+      ignore_placement_(false),
+      rotate_(false) {}
 
 point_symbolizer::point_symbolizer(point_symbolizer const& rhs)
     : symbolizer_with_image(rhs),
       symbolizer_base(rhs),
       overlap_(rhs.overlap_),
       point_p_(rhs.point_p_),
-      ignore_placement_(rhs.ignore_placement_) {}
+      ignore_placement_(rhs.ignore_placement_),
+      rotate_(rhs.rotate_) {}
 
 void point_symbolizer::set_allow_overlap(bool overlap)
 {
@@ -87,5 +93,16 @@ bool point_symbolizer::get_ignore_placement() const
 {
     return ignore_placement_;
 }
+
+void point_symbolizer::set_rotate(bool rotate)
+{
+    rotate_ = rotate;
+}
+
+bool point_symbolizer::get_rotate() const
+{
+    return rotate_;
+}
+
 }
 

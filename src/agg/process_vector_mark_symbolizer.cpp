@@ -83,22 +83,20 @@ void agg_renderer<T>::process(vector_mark_symbolizer const& sym,
             double y0 = 0.0;
             double x1 = 0.0;
             double y1 = 0.0;
+            double z = 0.0;
             unsigned command = geom.vertex(&x0, &y0);
             if (command == SEG_END)
                 continue;
-            while (SEG_END != (command = geom.vertex(&x1, &y1)))
+            while (SEG_LINETO == geom.vertex(&x1, &y1))
             {
-                if (command == SEG_CLOSE)
-                {
-                    command = geom.vertex(&x0, &y0);
-                    if (command == SEG_END)
-                        break;
-                    continue;
-                }
+                prj_trans.backward(x0, y0, z);
                 t_.forward(&x0, &y0);
+                prj_trans.backward(x1, y1, z);
                 t_.forward(&x1, &y1);
+                
                 agg::trans_affine trans;
                 trans *= tr;
+                
                 double length = distance(x0, y0, x1, y1);
                 if (length == 0.0)
                     continue;
