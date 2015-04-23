@@ -46,6 +46,17 @@
 
 namespace mapnik {
     
+inline double get_angle(double x0, double y0, double x1, double y1)
+{
+    double length = distance(x0, y0, x1, y1);
+    if (length == 0.0)
+        return 0.0;
+    double angle = acos((x1 - x0)/length);
+    if (y1 - y0 < 0.0)
+        angle = -angle;
+    return angle;
+}
+
 //TODO Redo!
 template <typename T>
 inline void render_marker_at_point(agg_renderer<T> &render, double x, double y,
@@ -106,8 +117,6 @@ void agg_renderer<T>::process(point_symbolizer const& sym,
             double x1 = 0.0;
             double y1 = 0.0;
             double z = 0.0;
-            if (geom.vertex(&x0, &y0) == SEG_END)
-                continue;
             
             if (sym.get_point_placement() == CENTROID_POINT_PLACEMENT)
             {
@@ -133,19 +142,12 @@ void agg_renderer<T>::process(point_symbolizer const& sym,
                 {
                     prj_trans.backward(x0, y0, z);
                     t_.forward(&x0, &y0);
-                    if (sym.get_rotate())
+                    if (sym.get_rotate() != NO_ROTATE)
                     {
                         geom.vertex(&x1, &y1);
                         prj_trans.backward(x1, y1, z);
                         t_.forward(&x1, &y1);
-                        
-                        double length = distance(x0, y0, x1, y1);
-                        if (length == 0.0)
-                            return;
-                        
-                        double angle = acos((x1 - x0)/length);
-                        if (y1 - y0 < 0.0)
-                            angle = -angle;
+                        double angle = get_angle(x0, y0, x1, y1);
                         tr *= agg::trans_affine_rotation(angle);
                         label_ext *= agg::trans_affine_rotation(angle);
                     }
@@ -159,18 +161,12 @@ void agg_renderer<T>::process(point_symbolizer const& sym,
                     geom.vertex(geom.size() - 1, &x1, &y1);
                     prj_trans.backward(x1, y1, z);
                     t_.forward(&x1, &y1);
-                    if (sym.get_rotate())
+                    if (sym.get_rotate() != NO_ROTATE)
                     {
                         prj_trans.backward(x0, y0, z);
                         t_.forward(&x0, &y0);
                         geom.vertex(geom.size() - 2, &x0, &y0);
-                        double length = distance(x0, y0, x1, y1);
-                        if (length == 0.0)
-                            return;
-                        
-                        double angle = acos((x1 - x0)/length);
-                        if (y1 - y0 < 0.0)
-                            angle = -angle;
+                        double angle = get_angle(x0, y0, x1, y1);
                         tr *= agg::trans_affine_rotation(angle);
                         label_ext *= agg::trans_affine_rotation(angle);
                     }
@@ -179,29 +175,48 @@ void agg_renderer<T>::process(point_symbolizer const& sym,
             }
             else if (sym.get_point_placement() == ALL)
             {
-                double angle = 0.0;
-                prj_trans.backward(x0, y0, z);
-                t_.forward(&x0, &y0);
-                while (SEG_LINETO == geom.vertex(&x1, &y1))
-                {
-                    prj_trans.backward(x1, y1, z);
-                    t_.forward(&x1, &y1);
-                    if (sym.get_rotate())
+                if (geom.type() == LineString)
+                {   
+                    if (geom.size() == 0)
+                        return;
+                    
+                    int begin = 0;
+                    int end = geom.size() - 1;
+                    int delta = 1;
+                    if (sym.get_rotate() == NEXT)
                     {
-                        double length = distance(x0, y0, x1, y1);
-                        if (length == 0.0)
-                            return;
-                        angle = acos((x1 - x0)/length);
-                        if (y1 - y0 < 0.0)
-                            angle = -angle;
-                        tr *= agg::trans_affine_rotation(angle);
-                        label_ext *= agg::trans_affine_rotation(angle);
+                        begin = geom.size() - 1;
+                        end = 0;
+                        delta = -1;
                     }
-                    render_marker_at_point(*this, x0, y0, *marker, tr, sym, detector_, label_ext);
-                    x0 = x1;
-                    y0 = y1;
+                    
+                    geom.vertex(begin, &x0, &y0);
+                    prj_trans.backward(x0, y0, z);
+                    t_.forward(&x0, &y0);
+                    
+                    for (int j = begin + delta; j != end; j += delta)
+                    {
+                        geom.vertex(j, &x1, &y1);
+                        prj_trans.backward(x1, y1, z);
+                        t_.forward(&x1, &y1);
+                        
+                        if (sym.get_rotate() == PREV)
+                        {
+                            double angle = get_angle(x0, y0, x1, y1);
+                            tr *= agg::trans_affine_rotation(angle);
+                            label_ext *= agg::trans_affine_rotation(angle);
+                        }
+                        else if (sym.get_rotate() == NEXT)
+                        {
+                             double angle = get_angle(x1, y1, x0, y0);
+                             tr *= agg::trans_affine_rotation(angle);
+                             label_ext *= agg::trans_affine_rotation(angle);
+                        }
+                        render_marker_at_point(*this, x1, y1, *marker, tr, sym, detector_, label_ext);
+                        x0 = x1;
+                        y0 = y1;
+                    }
                 }
-                render_marker_at_point(*this, x0, y0, *marker, tr, sym, detector_, label_ext);
             }
         }
     }

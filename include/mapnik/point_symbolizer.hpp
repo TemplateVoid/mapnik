@@ -40,7 +40,15 @@ enum point_placement_enum {
     point_placement_enum_MAX
 };
 
+enum rotate_enum {
+    NO_ROTATE,
+    NEXT,
+    PREV,
+    rotate_enum_MAX
+};
+
 DEFINE_ENUM( point_placement_e, point_placement_enum );
+DEFINE_ENUM( rotate_enum_e, rotate_enum );
 
 struct MAPNIK_DECL point_symbolizer :
         public symbolizer_with_image, public symbolizer_base
@@ -54,14 +62,14 @@ struct MAPNIK_DECL point_symbolizer :
     point_placement_e get_point_placement() const;
     void set_ignore_placement(bool ignore_placement);
     bool get_ignore_placement() const;
-    void set_rotate(bool rotate);
-    bool get_rotate() const;
+    void set_rotate(rotate_enum_e rotate);
+    rotate_enum_e get_rotate() const;
    
 private:
     bool overlap_;
     point_placement_e point_p_;
     bool ignore_placement_;
-    bool rotate_;
+    rotate_enum_e rotate_;
 };
 }
 

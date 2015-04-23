@@ -46,7 +46,7 @@ point_symbolizer::point_symbolizer():
     overlap_(false),
     point_p_(CENTROID_POINT_PLACEMENT),
     ignore_placement_(false),
-    rotate_(false) {}
+    rotate_(NO_ROTATE) {}
 
 point_symbolizer::point_symbolizer(path_expression_ptr file)
     : symbolizer_with_image(file),
@@ -54,7 +54,7 @@ point_symbolizer::point_symbolizer(path_expression_ptr file)
       overlap_(false),
       point_p_(CENTROID_POINT_PLACEMENT),
       ignore_placement_(false),
-      rotate_(false) {}
+      rotate_(NO_ROTATE) {}
 
 point_symbolizer::point_symbolizer(point_symbolizer const& rhs)
     : symbolizer_with_image(rhs),
@@ -94,12 +94,12 @@ bool point_symbolizer::get_ignore_placement() const
     return ignore_placement_;
 }
 
-void point_symbolizer::set_rotate(bool rotate)
+void point_symbolizer::set_rotate(rotate_enum_e rotate)
 {
     rotate_ = rotate;
 }
 
-bool point_symbolizer::get_rotate() const
+rotate_enum_e point_symbolizer::get_rotate() const
 {
     return rotate_;
 }
