@@ -59,7 +59,9 @@ public:
                       Detector &detector,
                       double spacing,
                       double max_error,
-                      bool allow_overlap)
+                      bool allow_overlap,
+                      boost::optional<double> shift
+                     )
       : locator_(locator),
         size_(size),
         tr_(tr),
@@ -74,7 +76,8 @@ public:
         next_y(0.0),
         error_(0.0),
         spacing_left_(0.0),
-        marker_nr_(0)
+        marker_nr_(0),
+        shift_(shift)
     {
       if (spacing >= 1)
       {
@@ -131,7 +134,10 @@ public:
         {
             //First marker
             marker_nr_++;
-            spacing_left_ = spacing_ / 2;
+            if (shift_ && *shift_ >= 0.0)
+                spacing_left_ = *shift_;
+            else
+                spacing_left_ = spacing_ / 2;
         }
         else
         {
@@ -249,6 +255,7 @@ private:
     double error_;
     double spacing_left_;
     unsigned marker_nr_;
+    boost::optional<double> shift_;
 
     /** Rotates the size_ box and translates the position. */
     box2d<double> perform_transform(double angle, double dx, double dy)

@@ -59,7 +59,8 @@ markers_symbolizer::markers_symbolizer()
       marker_p_(MARKER_POINT_PLACEMENT),
       // TODO: consider defaulting to MARKER_WHOLE_MULTI,
       //       for backward compatibility with 2.0.0
-      marker_mp_(MARKER_EACH_MULTI) { }
+      marker_mp_(MARKER_EACH_MULTI),
+      shift_() { }
 
 markers_symbolizer::markers_symbolizer(path_expression_ptr const& filename)
     : symbolizer_with_image(filename),
@@ -73,7 +74,8 @@ markers_symbolizer::markers_symbolizer(path_expression_ptr const& filename)
       marker_p_(MARKER_POINT_PLACEMENT),
       // TODO: consider defaulting to MARKER_WHOLE_MULTI,
       //       for backward compatibility with 2.0.0
-      marker_mp_(MARKER_EACH_MULTI) { }
+      marker_mp_(MARKER_EACH_MULTI),
+      shift_() { }
 
 markers_symbolizer::markers_symbolizer(markers_symbolizer const& rhs)
     : symbolizer_with_image(rhs),
@@ -198,6 +200,16 @@ void markers_symbolizer::set_marker_multi_policy(marker_multi_policy_e marker_mp
 marker_multi_policy_e markers_symbolizer::get_marker_multi_policy() const
 {
     return marker_mp_;
+}
+
+void markers_symbolizer::set_shift(double shift)
+{
+    shift_ = shift;
+}
+
+boost::optional<double> markers_symbolizer::get_shift() const
+{
+    return shift_;
 }
 
 }

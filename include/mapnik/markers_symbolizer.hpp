@@ -86,6 +86,8 @@ public:
     marker_placement_e get_marker_placement() const;
     void set_marker_multi_policy(marker_multi_policy_e marker_p);
     marker_multi_policy_e get_marker_multi_policy() const;
+    void set_shift(double shift);
+    boost::optional<double> get_shift() const;
 private:
     expression_ptr width_;
     expression_ptr height_;
@@ -99,6 +101,7 @@ private:
     boost::optional<stroke> stroke_;
     marker_placement_e marker_p_;
     marker_multi_policy_e marker_mp_;
+    boost::optional<double> shift_;
 };
 
 }
