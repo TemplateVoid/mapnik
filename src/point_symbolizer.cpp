@@ -34,7 +34,7 @@ static const char * point_placement_strings[] = {
     "interior",
     "all",
     "first",
-    "last"
+    "last",
     ""
 };
 
