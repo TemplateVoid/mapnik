@@ -73,7 +73,7 @@ void agg_renderer<T>::process(vector_mark_symbolizer const& sym,
 
         agg::trans_affine tr;
         evaluate_transform(tr, feature, sym.get_image_transform());
-	tr *= agg::trans_affine_translation(center.x, center.y);
+        tr *= agg::trans_affine_translation(center.x, center.y);
         
         for (std::size_t i=0; i<feature.num_geometries(); ++i)
         {
@@ -94,8 +94,7 @@ void agg_renderer<T>::process(vector_mark_symbolizer const& sym,
                 prj_trans.backward(x1, y1, z);
                 t_.forward(&x1, &y1);
                 
-                agg::trans_affine trans;
-                trans *= tr;
+                agg::trans_affine trans = tr;
                 
                 double length = distance(x0, y0, x1, y1);
                 if (length == 0.0)

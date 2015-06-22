@@ -105,6 +105,7 @@ void agg_renderer<T>::process(point_symbolizer const& sym,
         evaluate_transform(tr, feature, sym.get_image_transform());
         agg::trans_affine_translation recenter(-center.x, -center.y);
         agg::trans_affine recenter_tr = recenter * tr;
+        tr *= agg::trans_affine_translation(center.x, center.y);
         
         box2d<double> label_ext = bbox * recenter_tr * agg::trans_affine_scaling(scale_factor_);
 
@@ -140,6 +141,7 @@ void agg_renderer<T>::process(point_symbolizer const& sym,
             {
                 if (geom.type() == LineString && geom.size() >= 2)
                 {
+                    geom.vertex(&x0, &y0);
                     prj_trans.backward(x0, y0, z);
                     t_.forward(&x0, &y0);
                     if (sym.get_rotate() != NO_ROTATE)
@@ -163,9 +165,9 @@ void agg_renderer<T>::process(point_symbolizer const& sym,
                     t_.forward(&x1, &y1);
                     if (sym.get_rotate() != NO_ROTATE)
                     {
+                        geom.vertex(geom.size() - 2, &x0, &y0);
                         prj_trans.backward(x0, y0, z);
                         t_.forward(&x0, &y0);
-                        geom.vertex(geom.size() - 2, &x0, &y0);
                         double angle = get_angle(x0, y0, x1, y1);
                         tr *= agg::trans_affine_rotation(angle);
                         label_ext *= agg::trans_affine_rotation(angle);
@@ -199,20 +201,20 @@ void agg_renderer<T>::process(point_symbolizer const& sym,
                         geom.vertex(j, &x1, &y1);
                         prj_trans.backward(x1, y1, z);
                         t_.forward(&x1, &y1);
-                        
+			agg::trans_affine currTr = tr; 
                         if (sym.get_rotate() == PREV)
                         {
                             double angle = get_angle(x0, y0, x1, y1);
-                            tr *= agg::trans_affine_rotation(angle);
+                            currTr *= agg::trans_affine_rotation(angle);
                             label_ext *= agg::trans_affine_rotation(angle);
                         }
                         else if (sym.get_rotate() == NEXT)
                         {
                              double angle = get_angle(x1, y1, x0, y0);
-                             tr *= agg::trans_affine_rotation(angle);
+                             currTr *= agg::trans_affine_rotation(angle);
                              label_ext *= agg::trans_affine_rotation(angle);
                         }
-                        render_marker_at_point(*this, x1, y1, *marker, tr, sym, detector_, label_ext);
+                        render_marker_at_point(*this, x1, y1, *marker, currTr, sym, detector_, label_ext);
                         x0 = x1;
                         y0 = y1;
                     }

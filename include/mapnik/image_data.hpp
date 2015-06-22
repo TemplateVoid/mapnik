@@ -75,11 +75,16 @@ public:
     ImageData(const ImageData<T>& rhs)
         :width_(rhs.width_),
          height_(rhs.height_),
-         owns_data_(true),
-         pData_((rhs.width_!=0 && rhs.height_!=0)?
-                static_cast<T*>(::operator new(sizeof(T)*rhs.width_*rhs.height_)) :0)
+         owns_data_(rhs.owns_data_),
+         pData_(rhs.pData_)
     {
-        if (pData_) std::memcpy(pData_,rhs.pData_,sizeof(T)*rhs.width_* rhs.height_);
+	if (owns_data_) 
+	{
+	    pData_ = (rhs.width_!=0 && rhs.height_!=0) ?
+                static_cast<T*>(::operator new(sizeof(T)*rhs.width_*rhs.height_)) : 0;
+	    if (pData_) 
+		std::memcpy(pData_,rhs.pData_,sizeof(T)*rhs.width_* rhs.height_);
+	}
     }
     inline T& operator() (unsigned i,unsigned j)
     {
