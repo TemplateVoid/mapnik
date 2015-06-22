@@ -38,7 +38,15 @@ static const char * point_placement_strings[] = {
     ""
 };
 
+static const char * rotate_strings[] = {
+    "no",
+    "next",
+    "prev",
+    ""
+};
+
 IMPLEMENT_ENUM( point_placement_e, point_placement_strings )
+IMPLEMENT_ENUM( rotate_enum_e, rotate_strings )
 
 point_symbolizer::point_symbolizer():
     symbolizer_with_image(path_expression_ptr(new path_expression)), // FIXME

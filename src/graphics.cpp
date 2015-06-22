@@ -55,7 +55,7 @@ image_32::image_32(const image_32& rhs)
      data_(rhs.data_),
      painted_(rhs.painted_),
      premultiplied_(rhs.premultiplied_) {}
-     
+
 image_32::image_32(const image_data_32 &data):
     width_(data.width()),
     height_(data.height()),
